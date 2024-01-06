@@ -1,4 +1,5 @@
 <template>
+  <IconBox class="bg-[#E0FDEF]">
   <svg
     width="40"
     height="40"
@@ -12,4 +13,9 @@
       fill="#2FD887"
     />
   </svg>
+  </IconBox>
 </template>
+
+<script setup lang="ts">
+  import IconBox from './IconBox.vue';
+</script>

@@ -11,69 +11,37 @@
     </div>
   </Nav>
 
-  <main
-    class="max-w-[72.3125rem] w-full justify-self-center mt-[5.31rem] grid grid-cols-[29.0625rem,1fr] gap-[8.19rem]"
-  >
-    <section>
-      <h2
-        class="body-s text-grey-navy dark:text-light-bluish transition-colors"
-      >
-        Question {{ currentQuestionIndex + 1 }} of
-        {{ questions.data.value?.length }}
-      </h2>
-      <h3
-        class="heading-m text-dark-navy dark:text-pure-white transition-colors font-medium mt-[1.69rem]"
-      >
-        {{ currentQuestion?.question }}
-      </h3>
-
-      <div
-        class="w-full bg-pure-white dark:bg-navy transition-colors h-4 rounded-full p-1 mt-[10.5rem]"
-      >
-        <div
-          class="w-[var(--width)] h-2 bg-purple rounded-full transition-[width]"
-          :style="{ '--width': `${quizProgress}%` }"
-        />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-6">
-      <QuestionOption
-        v-for="(option, index) of currentQuestion?.options"
-        :letter="alphabet[index]"
-        :selected="selectedIndex === index"
-        :correct="correctAnswer != null ? correctAnswer === index : undefined"
-        :wrong="
-          selectedIndex === index &&
-          correctAnswer != null &&
-          correctAnswer !== index
-        "
-        :disable="correctAnswer != null"
-        @click="selectIndex(index)"
-      >
-        {{ option }}
-      </QuestionOption>
-
-      <Button v-if="correctAnswer == null" class="mt-2" @click="onSubmit">
-          Submit Answer
-      </Button>
-      <Button v-else class="mt-2" @click="onNext">Next Question</Button>
-      
-      <span v-if="selectAnAnswer" class="mx-auto flex gap-4 items-center body-m text-red transition-colors dark:text-light-grey"><Cross /> Please select an answer</span>
-    </section>
-  </main>
+  <Results 
+    v-if="hasFinishedQuiz" 
+    :correctAnswers="correct"
+    :icon="Icon"
+    :param="param"
+    :quizLength="questions.data.value?.length"
+  />
+  <Quiz 
+    v-else
+    :correctAnswer="correctAnswer"
+    :quizProgress="quizProgress"
+    :question="currentQuestion?.question"
+    :options="currentQuestion?.options"
+    :selectAnAnswer="selectAnAnswer"
+    :currentQuestionIndex="currentQuestionIndex"
+    :quizLength="questions.data.value?.length"
+    :selectedIndex="selectedIndex"
+    @submit="onSubmit"
+    @next="onNext"
+    @selectIndex="selectIndex"
+  />
 </template>
 
 <script setup lang="ts">
 import Nav from "~/components/Nav.vue";
+import Results from "~/components/Results.vue";
 import { useQuestions, type CategoryGroup } from "~/utils/category";
 import HTML from "~/components/icons/HTML.vue";
 import CSS from "~/components/icons/CSS.vue";
 import JS from "~/components/icons/JS.vue";
 import Accessibility from "~/components/icons/Accessibility.vue";
-import QuestionOption from "~/components/QuestionOption.vue";
-import Button from "~/components/form/Button.vue";
-import Cross from '~/components/icons/Cross.vue'
 
 ///// props/emits /////
 defineProps();
@@ -92,12 +60,12 @@ if (!isCategory(param)) {
   });
 }
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const questions = await useQuestions(param);
 const currentQuestionIndex = ref(0);
 const selectedIndex = ref<number>();
 const answers = ref<number[]>([]);
 const selectAnAnswer = ref(false)
+const correct = ref(0);
 
 ///// computed /////
 const currentQuestion = computed(
@@ -114,6 +82,12 @@ const correctAnswer = computed(() => {
   const answer = answers.value[currentQuestionIndex.value];
   return answer;
 });
+
+const hasFinishedQuiz = computed(() => {
+  const quizLength = questions.data.value?.length ?? 0
+
+  return currentQuestionIndex.value >= quizLength
+})
 
 ///// methods /////
 const selectIndex = (index: number) => {
@@ -134,6 +108,7 @@ const onSubmit = async () => {
   if (result != null) {
     answers.value[currentQuestionIndex.value] = result;
     selectAnAnswer.value = false;
+    correct.value += selectedIndex.value == result ? 1 : 0
   }
 };
 
@@ -149,10 +124,6 @@ const getCategoryIcon = (value: CategoryGroup) => {
 };
 
 const onNext = () => {
-  if (questions.data.value && currentQuestionIndex.value === questions.data.value?.length - 1) { 
-    return
-  }
-
   selectedIndex.value = undefined;
   currentQuestionIndex.value += 1;
 };

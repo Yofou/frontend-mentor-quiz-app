@@ -1,6 +1,6 @@
 <template>
   <button
-    class="p-8 text-pure-white shadow-quiz-category rounded-[1.5rem] heading-s font-medium"
+    class="p-[1.2rem] sm:p-8 text-pure-white shadow-quiz-category rounded-[.75rem] sm:rounded-[1.5rem] heading-s font-medium"
     @click="onClick"
   >
     <slot />

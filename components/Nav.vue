@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-full flex justify-between max-w-[72.3125rem]">
+  <nav class="w-full flex justify-between max-w-[72.3125rem] items-center">
     <div>
       <slot></slot> 
     </div>

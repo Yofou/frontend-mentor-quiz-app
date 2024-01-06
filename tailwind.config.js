@@ -32,8 +32,11 @@ export default {
       addUtilities({
         '.display': {
           fontFamily: theme('fontFamily.rubik'),
-          fontSize: '9rem',
           lineHeight: '100%',
+          fontSize: '5.5rem',
+          '@screen sm': {
+            fontSize: '9rem',
+          }
         },
         '.heading-l': {
           fontFamily: theme('fontFamily.rubik'),
@@ -45,8 +48,11 @@ export default {
         },
         '.heading-m': {
           fontFamily: theme('fontFamily.rubik'),
-          fontSize: '2.125rem',
           lineHeight: '100%',
+          fontSize: '1.25rem',
+          '@screen sm': {
+            fontSize: '2.125rem',
+          }
         },
         '.heading-s': {
           fontFamily: theme('fontFamily.rubik'),
@@ -58,8 +64,11 @@ export default {
         },
         '.body-m': {
           fontFamily: theme('fontFamily.rubik'),
-          fontSize: '1.5rem',
           lineHeight: '150%',
+          fontSize: '1.125rem',
+          '@screen sm': {
+            fontSize: '1.5rem',
+          }
         },
         '.body-s': {
           fontFamily: theme('fontFamily.rubik'),
