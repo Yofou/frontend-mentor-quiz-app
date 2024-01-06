@@ -22,7 +22,7 @@
         </div>
       </div>
       
-      <Button>Play Again</Button>
+      <Button href="/">Play Again</Button>
     </section>
   </main>
 </template>

@@ -1,5 +1,9 @@
 <template>
+  <NuxtLink v-if="props.href" class="p-[1.2rem] text-center sm:p-8 text-pure-white shadow-quiz-category rounded-[.75rem] sm:rounded-[1.5rem] heading-s font-medium" :to="href">
+    <slot />
+  </NuxtLink>
   <button
+    v-else
     class="p-[1.2rem] sm:p-8 text-pure-white shadow-quiz-category rounded-[.75rem] sm:rounded-[1.5rem] heading-s font-medium"
     @click="onClick"
   >
@@ -11,7 +15,9 @@
 import { defineProps } from "vue";
 
 ///// props/emits /////
-defineProps();
+const props = defineProps<{
+  href?: string;
+}>();
 
 const emits = defineEmits<{
   (e: "click"): void;
@@ -44,7 +50,7 @@ const onClick = () => {
   inherits: false;
 }
 
-button {
+button, a {
   --color-1: theme("colors.purple");
   background: linear-gradient(0deg, var(--color-1) 0%, var(--color-1) 100%),
     theme("colors.purple");
@@ -52,7 +58,9 @@ button {
 }
 
 button:hover,
-button:focus {
+button:focus,
+a:hover,
+a:focus {
   --color-1: rgba(255, 255, 255, 0.5);
 }
 </style>
